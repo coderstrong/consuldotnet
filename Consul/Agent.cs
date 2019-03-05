@@ -23,6 +23,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections;
+using System.Net.Http.Headers;
 
 namespace Consul
 {
@@ -168,6 +169,18 @@ namespace Consul
     }
 
     /// <summary>
+    /// AgentWeightRegistration is used to register a new service
+    /// </summary>
+    public class AgentWeightRegistration
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int Passing { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int Warning { get; set; }
+    }
+
+    /// <summary>
     /// AgentServiceRegistration is used to register a new service
     /// </summary>
     public class AgentServiceRegistration
@@ -200,7 +213,7 @@ namespace Consul
         public IDictionary<string, string> Meta { get; set; }
         
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public IDictionary<string, string> Weights { get; set; }
+        public AgentWeightRegistration Weights { get; set; }
     }
 
     /// <summary>
@@ -229,6 +242,18 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Script { get; set; }
 
+        /// <summary>
+        /// Specifies the ID of the node for an alias check. If no service is specified, the check will alias the health of the node. If a service is specified, the check will alias the specified service on this particular node.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string AliasNode { get; set; }
+
+        /// <summary>
+        /// Specifies the ID of a service for an alias check. If the service is not registered with the same agent, AliasNode must also be specified. Note this is the service ID and not the service name (though they are very often the same).
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string AliasService { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string DockerContainerID { get; set; }
 
@@ -251,6 +276,12 @@ namespace Consul
         public string HTTP { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Method { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string,IEnumerable<string>> Header { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string TCP { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -259,6 +290,9 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool TLSSkipVerify { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string[] Args { get; set; }
 
         /// <summary>
         /// In Consul 0.7 and later, checks that are associated with a service
